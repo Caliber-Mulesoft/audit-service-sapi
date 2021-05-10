@@ -8,11 +8,11 @@
 # --- #
 # Eclipse-specific (https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore) #
 # --- #
-*.pydevproject
+.pydevproject
 .metadata
-bin/**
-tmp/**
-tmp/**/*
+bin/
+tmp/
+tmp/**/
 *.tmp
 *.bak
 *.swp
@@ -26,7 +26,7 @@ local.properties
 # External tool builders
 .externalToolBuilders/
 # Locally stored "Eclipse launch configurations"
-*.launch
+.launch
 # CDT-specific
 .cproject
 # PDT-specific
@@ -37,4 +37,4 @@ local.properties
 .studio/
 flows/
 target/
-**/*.mflow
+**/.mflow
