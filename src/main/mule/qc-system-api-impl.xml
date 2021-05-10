@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-caliber-notes-one-endpoint" doc:id="c2214813-d578-46de-a456-09e7c635709c" >
+		<http:request method="GET" doc:name="Invoke Caliber Rest Service" doc:id="7b5b06c2-09f5-4467-83a5-b2df66898198" config-ref="caliberRestApi" path="${caliber.rest.path}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="bcdf4db4-d393-4f68-8a06-7b79c04df1ab" message="#[payload]"/>
+	</flow>
+	<flow name="get-all-notes-from-database" doc:id="8e646aab-4fec-43ca-b531-982ea4feb9b2">
+		<db:select doc:name="getAllNotes" doc:id="2cadb084-b386-4de0-8d23-93f8f5f0d655" config-ref="postgreSqlAWS">
+			<db:sql><![CDATA[select * from notes]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="a9d09279-bc34-4e44-9103-80f90bb6a604">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="1b3e64bd-ba8d-490f-bc06-a8d4e653e64f" message=" #[payload]" />
+	</flow>
+	<flow name="get-all-notes" doc:id="586cb6a6-2692-4da8-a22c-250ad2811083">
+		<flow-ref doc:name="Flow Reference" doc:id="5ef44ff2-d124-49cd-8c44-22a4a43bf6ba" name="get-all-batches" />
+		<ee:transform doc:name="Transform Message" doc:id="f66ba018-08e8-468d-aa30-8d6fa870b9a5">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map {
+	index: $$,
+	id: $.batchId as String,
+	startDate: $.startDate,
+	endDate: $.endDate
+	
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="1c43f5bb-9421-40da-922d-6b8e368c1ee8" message="#[payload]" />
+		<ee:transform doc:name="Transform Message" doc:id="4c1026c2-2f7c-41af-a4ef-456923f1fbc5">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="notes"><![CDATA[%dw 2.0
+output application/json
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="5b428af5-ba87-4ef4-9772-5e5b5e0f4dd5">
+			<logger level="INFO" doc:name="Log current value of iteration" doc:id="82baa07d-ddbc-4859-9db6-910a19039b9e" message="Current value of iteration is #[payload]" />
+			<flow-ref doc:name="Flow Reference" doc:id="e60c09b2-e2c1-499c-9a55-e03d581c00a3" name="get-all-notes-by-batch-id" target="result" />
+			<ee:transform doc:name="Reassign notes var" doc:id="32af4c52-8a87-4de4-a9d3-13a2e9816a1a">
+				<ee:message />
+				<ee:variables>
+					<ee:set-variable variableName="notes"><![CDATA[%dw 2.0
+output application/json
+---
+vars.notes ++ vars.result ]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="Log value of notes" doc:id="3f62c5c1-8398-4c42-9cb0-1cd91c90caf7" message="Current value of notes is #[vars.notes]" />
+		</foreach>
+		<set-payload doc:name="Set Payload" doc:id="ac2cb421-7c66-4c42-befc-2baf9ccae77a" value="#[vars.notes]" />
+		<logger level="INFO" doc:name="Logger" doc:id="dc6abdbb-fe27-4d11-9360-e01482f4eed4" />
+		<ee:transform doc:name="Transform Message" doc:id="537a137e-9de0-478e-819d-c24abca7df84">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	AssociateId: payload01.associateId as String default null,
+	BatchId: payload01.batchId,
+	Content: payload01.content,
+	CreatedOn: payload01.createdOn as String default null,
+	EmployeeId: payload01.employeeId,
+	LastUpdated: payload01.lastUpdated as String default null,
+	NoteId: payload01.noteId,
+	TechnicalStatus: payload01.technicalStatus,
+	Type: payload01."type",
+	Week: payload01.week
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-all-batches" doc:id="d7010e3e-20e9-4bd3-84d6-c9d03acc6414">
+		<http:request method="GET" doc:name="Request" doc:id="c42e2046-7708-4b4f-89a0-f3c03552e20f" config-ref="caliberRestApi" path="${caliber.rest.path}" />
+	</flow>
+	<flow name="get-all-notes-by-batch-id" doc:id="7476f863-ee30-4d3c-907f-f1348f9d1dda" >
+		<http:request method="GET" doc:name="Request" doc:id="84d94062-0e46-4dd0-9a2e-cade6ba26fbc" config-ref="caliberApiForNotes" path="${caliber.rest.path}/{batchId}" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	batchId : "$(payload.id)"
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="get-all-notes-by-batchId-and-by-week" doc:id="31a34432-d098-4d50-a3ad-87418a452d93" >
+		<http:request method="GET" doc:name="Request" doc:id="f3fea16e-2124-424e-b06b-fc3ea9387669" config-ref="caliberApiForNotes" path="${caliber.rest.path}/{batchId}/{week}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	week : "$(message.attributes.uriParams.week)",
+	batchId : "$(message.attributes.uriParams.batchId)"
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="69cd18f3-80a6-458a-a184-595a15fc4f47" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	AssociateId: payload01.associateId as String default null,
+	BatchId: payload01.batchId,
+	Content: payload01.content,
+	CreatedOn: payload01.createdOn as String default null,
+	EmployeeId: payload01.employeeId,
+	LastUpdated: payload01.lastUpdated as String default null,
+	NoteId: payload01.noteId,
+	TechnicalStatus: payload01.technicalStatus,
+	Type: payload01."type",
+	Week: payload01.week
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-all-notes-by-batchId" doc:id="917de148-a880-4801-9067-8e1efdb9bd1e" >
+		<http:request method="GET" doc:name="Request" doc:id="3c7bc989-e31e-4fd9-b5ee-c3f7dcc96ca9" config-ref="caliberApiForNotes" path="${caliber.rest.path}/{batchId}">
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	batchId : "$(message.attributes.uriParams.batchId)"
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="faa76032-0e72-4398-a246-47e908ab1e3b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	AssociateId: payload01.associateId as String default null,
+	BatchId: payload01.batchId,
+	Content: payload01.content,
+	CreatedOn: payload01.createdOn as String default null,
+	EmployeeId: payload01.employeeId,
+	LastUpdated: payload01.lastUpdated as String default null,
+	NoteId: payload01.noteId,
+	TechnicalStatus: payload01.technicalStatus,
+	Type: payload01."type",
+	Week: payload01.week
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

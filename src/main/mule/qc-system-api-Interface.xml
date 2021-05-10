@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <http:listener-config name="qc-system-api-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="qc-system-api-config" api="resource::202383ba-8a30-47f2-a9af-40a59ffe741f:qc-system-api:1.0.5:raml:zip:qc-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="qc-system-api-main">
+        <http:listener config-ref="qc-system-api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="qc-system-api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="qc-system-api-console">
+        <http:listener config-ref="qc-system-api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="qc-system-api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\notes:qc-system-api-config">
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    AssociateId: "TR-EE",
+    BatchId: "TR-1201",
+    Content: "This is a Qc batch note on week 1",
+    CreatedOn: "2021-04-22",
+    EmployeeId: "QC-User",
+    LastUpdated: "2021-04-28",
+    NoteId: 982,
+    TechnicalStatus: "Poor",
+    Type: "QC_BATCH",
+    Week: 1
+  }, 
+  {
+    AssociateId: "TR-FF",
+    BatchId: "TR-1990",
+    Content: "This is a Qc batch note on week 3",
+    CreatedOn: "2021-04-02",
+    EmployeeId: "QC-User",
+    LastUpdated: "2021-04-15",
+    NoteId: 934,
+    TechnicalStatus: "Average",
+    Type: "QC_BATCH",
+    Week: 3
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <flow-ref doc:name="Flow Reference" doc:id="e79001b0-318f-4476-8c7f-90cbe7544930" name="get-all-notes" />
+    </flow>
+    <flow name="get:\notes\(batchId)\(week):qc-system-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="batchId">attributes.uriParams.'batchId'</ee:set-variable>
+                <ee:set-variable variableName="week">attributes.uriParams.'week'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    AssociateId: "TR-EE",
+    BatchId: "TR-1201",
+    Content: "This is a Qc batch note on week 1",
+    CreatedOn: "2021-04-22",
+    EmployeeId: "QC-User",
+    LastUpdated: "2021-04-28",
+    NoteId: 982,
+    TechnicalStatus: "Poor",
+    Type: "QC_BATCH",
+    Week: 1
+  }, 
+  {
+    AssociateId: "TR-FF",
+    BatchId: "TR-1990",
+    Content: "This is a Qc batch note on week 3",
+    CreatedOn: "2021-04-02",
+    EmployeeId: "QC-User",
+    LastUpdated: "2021-04-15",
+    NoteId: 934,
+    TechnicalStatus: "Average",
+    Type: "QC_BATCH",
+    Week: 3
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <flow-ref doc:name="Flow Reference" doc:id="6f07d2e5-5707-4743-9d93-b20cbd40fce5" name="get-all-notes-by-batchId-and-by-week" />
+    </flow>
+    <flow name="get:\notes\(batchId):qc-system-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="batchId">attributes.uriParams.'batchId'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    AssociateId: "TR-EE",
+    BatchId: "TR-1201",
+    Content: "This is a Qc batch note on week 1",
+    CreatedOn: "2021-04-22",
+    EmployeeId: "QC-User",
+    LastUpdated: "2021-04-28",
+    NoteId: 982,
+    TechnicalStatus: "Poor",
+    Type: "QC_BATCH",
+    Week: 1
+  }, 
+  {
+    AssociateId: "TR-FF",
+    BatchId: "TR-1990",
+    Content: "This is a Qc batch note on week 3",
+    CreatedOn: "2021-04-02",
+    EmployeeId: "QC-User",
+    LastUpdated: "2021-04-15",
+    NoteId: 934,
+    TechnicalStatus: "Average",
+    Type: "QC_BATCH",
+    Week: 3
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="d139b21d-833c-46fb-a1f6-d8896216b102" name="get-all-notes-by-batchId"/>
+    </flow>
+	<flow name="get:\batches:qc-system-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="b68b0590-97df-44e1-8244-a589267b64b2" name="get-all-batches" />
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="996b6fff-df3d-4ef0-a08a-5ac9f8e5e08f">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	BatchId: payload01.batchId,
+	StartDate: payload01.startDate,
+	EndDate: payload01.endDate
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

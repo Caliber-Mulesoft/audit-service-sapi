@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:request-config name="caliberRestApi" doc:name="HTTP Request configuration" doc:id="f78eaa82-7cfa-4366-b450-dcd14d1f8664" basePath="${caliber.rest.basePath}" >
+		<http:request-connection host="${caliber.rest.host}" port="${caliber.rest.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="a1c4d42f-22b6-451e-85d5-934687c8c381" file="config.yaml" />
+	<db:config name="postgreSqlAWS" doc:name="Database Config" doc:id="b6da1973-0797-45d3-83be-88d429264fa4" >
+		<db:generic-connection url="${secure::db.url}" driverClassName="org.postgresql.Driver" user="${secure::db.user}" password="${secure::db.password}" />
+	</db:config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="1a35f8ed-4767-49a0-b579-d54299c9b012" file="config-secure.yaml" key="${encrypt.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<http:request-config name="caliberApiForNotes" doc:name="HTTP Request configuration" doc:id="d917e54a-c9ca-4dd5-8fc2-b8dbb13c5fe3" basePath="${caliber.rest.basePathNotes}">
+		<http:request-connection host="${caliber.rest.host}" port="${caliber.rest.port}" protocol="HTTPS"/>
+	</http:request-config>
+</mule>
