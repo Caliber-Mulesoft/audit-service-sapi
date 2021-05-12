@@ -6,24 +6,6 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<flow name="get-caliber-notes-one-endpoint" doc:id="c2214813-d578-46de-a456-09e7c635709c" >
-		<http:request method="GET" doc:name="Invoke Caliber Rest Service" doc:id="7b5b06c2-09f5-4467-83a5-b2df66898198" config-ref="caliberRestApi" path="${caliber.rest.path}"/>
-		<logger level="INFO" doc:name="Logger" doc:id="bcdf4db4-d393-4f68-8a06-7b79c04df1ab" message="#[payload]"/>
-	</flow>
-	<flow name="get-all-notes-from-database" doc:id="8e646aab-4fec-43ca-b531-982ea4feb9b2">
-		<db:select doc:name="getAllNotes" doc:id="2cadb084-b386-4de0-8d23-93f8f5f0d655" config-ref="postgreSqlAWS">
-			<db:sql><![CDATA[select * from notes]]></db:sql>
-		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="a9d09279-bc34-4e44-9103-80f90bb6a604">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="1b3e64bd-ba8d-490f-bc06-a8d4e653e64f" message=" #[payload]" />
-	</flow>
 	<flow name="get-all-notes" doc:id="586cb6a6-2692-4da8-a22c-250ad2811083">
 		<flow-ref doc:name="Flow Reference" doc:id="5ef44ff2-d124-49cd-8c44-22a4a43bf6ba" name="get-all-batches" />
 		<ee:transform doc:name="Transform Message" doc:id="f66ba018-08e8-468d-aa30-8d6fa870b9a5">
