@@ -39,13 +39,47 @@ Get all notes and batches information from Revature Caliber Legacy API
 
 ## USAGE EXAMPLES
 
- * Get all notes:  /notes
- 
- * Get all notes by batch ID:  /notes/{batchId}
- 
- * Get all notes by batch ID and week number:  /notes/{batchId}/{week}
+* Get all notes:  /notes
+* Get all notes by batch ID:  /notes/{batchId}
+* Get all notes by batch ID and week number:  /notes/{batchId}/{week}
 
- * Get all batches information: /batches
+* Example response:
+ ```
+  [
+  {
+    "AssociateId": null,
+    "BatchId": "TR-1201",
+    "Content": "This is a Qc batch note on week 1",
+    "CreatedOn": null,
+    "EmployeeId": "QC-User",
+    "LastUpdated": null,
+    "NoteId": 982,
+    "TechnicalStatus": "Poor",
+    "Type": "QC_BATCH",
+    "Week": 1
+  }
+]
+ ```
+
+* Get all batches information: /batches
+ 
+* Example response:
+ ```
+ [
+  {
+    "BatchId": "TR-1201",
+    "StartDate": "2021-02-22",
+    "EndDate": "2021-05-15"
+  },
+  {
+    "BatchId": "TR-1201",
+    "StartDate": "2021-01-01",
+    "EndDate": "2021-03-15"
+  }
+]
+ 
+ ```
+ 
 
 ## ROADMAP
 
