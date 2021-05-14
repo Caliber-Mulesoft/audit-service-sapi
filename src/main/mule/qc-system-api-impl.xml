@@ -70,10 +70,10 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</ee:transform>
 	</flow>
 	<flow name="get-all-batches" doc:id="d7010e3e-20e9-4bd3-84d6-c9d03acc6414">
-		<http:request method="GET" doc:name="Request" doc:id="c42e2046-7708-4b4f-89a0-f3c03552e20f" config-ref="caliberRestApi" path="${caliber.rest.path}" />
+		<http:request method="GET" doc:name="Request" doc:id="c42e2046-7708-4b4f-89a0-f3c03552e20f" config-ref="caliberApiTraining" path="${caliber.rest.pathTraining}" />
 	</flow>
 	<flow name="get-all-notes-by-batch-id" doc:id="7476f863-ee30-4d3c-907f-f1348f9d1dda" >
-		<http:request method="GET" doc:name="Request" doc:id="84d94062-0e46-4dd0-9a2e-cade6ba26fbc" config-ref="caliberApiForNotes" path="${caliber.rest.path}/{batchId}" >
+		<http:request method="GET" doc:name="Request" doc:id="84d94062-0e46-4dd0-9a2e-cade6ba26fbc" config-ref="caliberApiQA" path="${caliber.rest.pathNotes}/{batchId}" >
 			<http:uri-params ><![CDATA[#[output application/java
 ---
 {
@@ -82,7 +82,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</http:request>
 	</flow>
 	<flow name="get-all-notes-by-batchId-and-by-week" doc:id="31a34432-d098-4d50-a3ad-87418a452d93" >
-		<http:request method="GET" doc:name="Request" doc:id="f3fea16e-2124-424e-b06b-fc3ea9387669" config-ref="caliberApiForNotes" path="${caliber.rest.path}/{batchId}/{week}">
+		<http:request method="GET" doc:name="Request" doc:id="f3fea16e-2124-424e-b06b-fc3ea9387669" config-ref="caliberApiQA" path="${caliber.rest.pathNotes}/{batchId}/{week}">
 			<http:uri-params ><![CDATA[#[output application/java
 ---
 {
@@ -111,7 +111,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</ee:transform>
 	</flow>
 	<flow name="get-all-notes-by-batchId" doc:id="917de148-a880-4801-9067-8e1efdb9bd1e" >
-		<http:request method="GET" doc:name="Request" doc:id="3c7bc989-e31e-4fd9-b5ee-c3f7dcc96ca9" config-ref="caliberApiForNotes" path="${caliber.rest.path}/{batchId}">
+		<http:request method="GET" doc:name="Request" doc:id="3c7bc989-e31e-4fd9-b5ee-c3f7dcc96ca9" config-ref="caliberApiQA" path="${caliber.rest.pathNotes}/{batchId}">
 			<http:uri-params><![CDATA[#[output application/java
 ---
 {
@@ -135,6 +135,26 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 	Type: payload01."type",
 	Week: payload01.week
 }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-category" doc:id="2b80aa61-624a-4b67-90b9-a0e4d16aef28" >
+		<http:request method="GET" doc:name="Request" doc:id="ebd6b529-4053-4eb6-818a-292fce6a9501" config-ref="caliberApiQA" path="${caliber.rest.pathCategory}/{batchId}/{week}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	week : "$(message.attributes.queryParams.week)",
+	batchId : "$(message.attributes.queryParams.batchId)"
+}]]]></http:uri-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="7d62ffed-ab29-4716-8ca5-4c3565796265" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="cd6bfb2c-ef07-4b96-a9d1-cdff784796d8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload[0]
+	]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>

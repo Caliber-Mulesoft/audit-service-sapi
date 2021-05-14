@@ -2,7 +2,8 @@ caliber:
   rest:
     host: "caliber2-mock.revaturelabs.com"
     port: "443"
-    basePath: "/mock/training"
-    path: "/batch"
-    basePathNotes: "/mock/qa/notes"
-
+    basePathTraining: "/mock/training"
+    basePathQA: "/mock/qa"
+    pathTraining: "/batch"
+    pathNotes: "/notes/batch"
+    pathCategory: "/category"

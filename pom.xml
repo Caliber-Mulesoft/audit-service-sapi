@@ -80,7 +80,7 @@
     	<dependency>
             <groupId>202383ba-8a30-47f2-a9af-40a59ffe741f</groupId>
             <artifactId>qc-system-api</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <classifier>raml</classifier>
             <type>zip</type>
         </dependency>

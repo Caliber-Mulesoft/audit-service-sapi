@@ -3,7 +3,7 @@
     <http:listener-config name="qc-system-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="qc-system-api-config" api="resource::202383ba-8a30-47f2-a9af-40a59ffe741f:qc-system-api:1.0.5:raml:zip:qc-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="qc-system-api-config" api="resource::202383ba-8a30-47f2-a9af-40a59ffe741f:qc-system-api:1.0.6:raml:zip:qc-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="qc-system-api-main">
         <http:listener config-ref="qc-system-api-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -240,9 +240,9 @@ output application/json
 ]]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-		<flow-ref doc:name="Flow Reference" doc:id="d139b21d-833c-46fb-a1f6-d8896216b102" name="get-all-notes-by-batchId"/>
+        <flow-ref doc:name="Flow Reference" doc:id="d139b21d-833c-46fb-a1f6-d8896216b102" name="get-all-notes-by-batchId" />
     </flow>
-	<flow name="get:\batches:qc-system-api-config">
+    <flow name="get:\batches:qc-system-api-config">
         <flow-ref doc:name="Flow Reference" doc:id="b68b0590-97df-44e1-8244-a589267b64b2" name="get-all-batches" />
         <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="996b6fff-df3d-4ef0-a08a-5ac9f8e5e08f">
             <ee:message>
@@ -256,5 +256,8 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+    </flow>
+    <flow name="get:\category:qc-system-api-config">
+		<flow-ref doc:name="Flow Reference" doc:id="601d258a-1afd-4de9-94fa-0ff484a9a274" name="get-category"/>
     </flow>
 </mule>

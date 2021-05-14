@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/202383ba-8a30-47f2-a9af-40a59ffe741f/qc-system-api/1.0.5"/>
+	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/202383ba-8a30-47f2-a9af-40a59ffe741f/qc-system-api/1.0.6"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.modules/mule-secure-configuration-property-module/1.2.3"/>
 	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-db-connector/1.9.1"/>
