@@ -98,4 +98,4 @@ Get all notes and batches information from Revature Caliber Legacy API
 
 * Zephyr Zambrano
 
-* CloudHub Captin: Iyad Shobaki
+* CloudHub Captain: Iyad Shobaki
