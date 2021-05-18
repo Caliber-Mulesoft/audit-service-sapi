@@ -124,140 +124,49 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\notes:qc-system-api-config">
-        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Notes Examples">
             <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    AssociateId: "TR-EE",
-    BatchId: "TR-1201",
-    Content: "This is a Qc batch note on week 1",
-    CreatedOn: "2021-04-22",
-    EmployeeId: "QC-User",
-    LastUpdated: "2021-04-28",
-    NoteId: 982,
-    TechnicalStatus: "Poor",
-    Type: "QC_BATCH",
-    Week: 1
-  }, 
-  {
-    AssociateId: "TR-FF",
-    BatchId: "TR-1990",
-    Content: "This is a Qc batch note on week 3",
-    CreatedOn: "2021-04-02",
-    EmployeeId: "QC-User",
-    LastUpdated: "2021-04-15",
-    NoteId: 934,
-    TechnicalStatus: "Average",
-    Type: "QC_BATCH",
-    Week: 3
-  }
-]]]></ee:set-payload>
+				<ee:set-payload resource="notesExamples.dwl" />
             </ee:message>
         </ee:transform>
-        <flow-ref doc:name="Flow Reference" doc:id="e79001b0-318f-4476-8c7f-90cbe7544930" name="get-all-notes" />
+        <flow-ref doc:name="References Get All Notes" doc:id="e79001b0-318f-4476-8c7f-90cbe7544930" name="get-all-notes" />
     </flow>
     <flow name="get:\notes\(batchId)\(week):qc-system-api-config">
-        <ee:transform>
+        <ee:transform doc:name='Uri Params "week"'>
             <ee:variables>
                 <ee:set-variable variableName="batchId">attributes.uriParams.'batchId'</ee:set-variable>
                 <ee:set-variable variableName="week">attributes.uriParams.'week'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Notes Examples">
             <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    AssociateId: "TR-EE",
-    BatchId: "TR-1201",
-    Content: "This is a Qc batch note on week 1",
-    CreatedOn: "2021-04-22",
-    EmployeeId: "QC-User",
-    LastUpdated: "2021-04-28",
-    NoteId: 982,
-    TechnicalStatus: "Poor",
-    Type: "QC_BATCH",
-    Week: 1
-  }, 
-  {
-    AssociateId: "TR-FF",
-    BatchId: "TR-1990",
-    Content: "This is a Qc batch note on week 3",
-    CreatedOn: "2021-04-02",
-    EmployeeId: "QC-User",
-    LastUpdated: "2021-04-15",
-    NoteId: 934,
-    TechnicalStatus: "Average",
-    Type: "QC_BATCH",
-    Week: 3
-  }
-]]]></ee:set-payload>
+				<ee:set-payload resource="notesExamples.dwl" />
             </ee:message>
         </ee:transform>
-        <flow-ref doc:name="Flow Reference" doc:id="6f07d2e5-5707-4743-9d93-b20cbd40fce5" name="get-all-notes-by-batchId-and-by-week" />
+        <flow-ref doc:name="References Get All Notes By Batch Id And Week" doc:id="6f07d2e5-5707-4743-9d93-b20cbd40fce5" name="get-all-notes-by-batchId-and-by-week" />
     </flow>
     <flow name="get:\notes\(batchId):qc-system-api-config">
-        <ee:transform>
+        <ee:transform doc:name='Uri Params "batchId"'>
             <ee:variables>
                 <ee:set-variable variableName="batchId">attributes.uriParams.'batchId'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Notes Examples">
             <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    AssociateId: "TR-EE",
-    BatchId: "TR-1201",
-    Content: "This is a Qc batch note on week 1",
-    CreatedOn: "2021-04-22",
-    EmployeeId: "QC-User",
-    LastUpdated: "2021-04-28",
-    NoteId: 982,
-    TechnicalStatus: "Poor",
-    Type: "QC_BATCH",
-    Week: 1
-  }, 
-  {
-    AssociateId: "TR-FF",
-    BatchId: "TR-1990",
-    Content: "This is a Qc batch note on week 3",
-    CreatedOn: "2021-04-02",
-    EmployeeId: "QC-User",
-    LastUpdated: "2021-04-15",
-    NoteId: 934,
-    TechnicalStatus: "Average",
-    Type: "QC_BATCH",
-    Week: 3
-  }
-]]]></ee:set-payload>
+				<ee:set-payload resource="notesExamples.dwl" />
             </ee:message>
         </ee:transform>
-        <flow-ref doc:name="Flow Reference" doc:id="d139b21d-833c-46fb-a1f6-d8896216b102" name="get-all-notes-by-batchId" />
+        <flow-ref doc:name="References Get All Notes By Batch Id" doc:id="d139b21d-833c-46fb-a1f6-d8896216b102" name="get-all-notes-by-batchId" />
     </flow>
     <flow name="get:\batches:qc-system-api-config">
-        <flow-ref doc:name="Flow Reference" doc:id="b68b0590-97df-44e1-8244-a589267b64b2" name="get-all-batches" />
-        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="996b6fff-df3d-4ef0-a08a-5ac9f8e5e08f">
+        <flow-ref doc:name="References Get All Batches" doc:id="b68b0590-97df-44e1-8244-a589267b64b2" name="get-all-batches" />
+        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="996b6fff-df3d-4ef0-a08a-5ac9f8e5e08f" doc:name="Extract BatchId, StartDate, and EndDate From Original Payload">
             <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload map ( payload01 , indexOfPayload01 ) -> {
-	BatchId: payload01.batchId,
-	StartDate: payload01.startDate,
-	EndDate: payload01.endDate
-}]]></ee:set-payload>
+				<ee:set-payload resource="qcVersionOfBatchesInfo.dwl" />
             </ee:message>
         </ee:transform>
     </flow>
     <flow name="get:\category:qc-system-api-config">
-		<flow-ref doc:name="Flow Reference" doc:id="601d258a-1afd-4de9-94fa-0ff484a9a274" name="get-category"/>
+		<flow-ref doc:name="References Get Category" doc:id="601d258a-1afd-4de9-94fa-0ff484a9a274" name="get-category"/>
     </flow>
 </mule>
