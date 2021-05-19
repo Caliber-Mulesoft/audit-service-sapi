@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="caliber_notes_json" format="json">
+      <types:shape format="weave" example="caliberNotes.json"><![CDATA[%dw 2.0
+
+type caliber_notes_json = Array<{|  AssociateId: String,   BatchId: String,   Content: String,   CreatedOn: String,   EmployeeId: String,   LastUpdated: String,   NoteId: Number {"typeId": "int"},   TechnicalStatus: String,   Type: String,   Week: Number {"typeId": "int"}|}> {"example": "[{\\\"AssociateId\\\":\\\"TR-EE\\\",\\\"BatchId\\\":\\\"TR-1201\\\",\\\"Content\\\":\\\"This is a Qc batch note on week 1\\\",\\\"CreatedOn\\\":\\\"2021-04-22\\\",\\\"EmployeeId\\\":\\\"QC-User\\\",\\\"LastUpdated\\\":\\\"2021-04-28\\\",\\\"NoteId\\\":982,\\\"TechnicalStatus\\\":\\\"Poor\\\",\\\"Type\\\":\\\"QC_BATCH\\\",\\\"Week\\\":1}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="batches_info_json" format="json">
+      <types:shape format="weave" example="batchesInfo.json"><![CDATA[%dw 2.0
+
+type batches_info_json = Array<{|  id: Number {"typeId": "int"},   batchId: String,   name: String,   startDate: String,   endDate: String,   skill: String,   location: String,   "type": String,   goodGrade: Number {"typeId": "int"},   passingGrade: Number {"typeId": "int"},   employeeAssignments: Array<{|    role: String,     employee: {|      email: String,       firstName: String,       lastName: String    |},     deletedAt: Null  |}>, 
+  associateAssignments: Array<{|    trainingStatus: String,     associate: {|      email: String,       salesforceId: String,       firstName: String,       lastName: String,       flag: Null    |},     startDate: String,     endDate: String,     active: Boolean  |}>, 
+  currentWeek: Number {"typeId": "int"}
+|}> {"example": "[{\\\"id\\\":101,\\\"batchId\\\":\\\"TR-1201\\\",\\\"name\\\":\\\"Mock Batch 101\\\",\\\"startDate\\\":\\\"2021-12-03\\\",\\\"endDate\\\":\\\"2022-02-11\\\",\\\"skill\\\":\\\"Java React\\\",\\\"location\\\":\\\"Reston\\\",\\\"type\\\":\\\"Corporate\\\",\\\"goodGrade\\\":70,\\\"passingGrade\\\":80,\\\"employeeAssignments\\\":[{\\\"role\\\":\\\"ROLE_LEAD_TRAINER\\\",\\\"employee\\\":{\\\"email\\\":\\\"mock1030.employee7354c42d-2091-4228-a7e1-34822db0f0fa@mock.com\\\",\\\"firstName\\\":\\\"Mock 1030\\\",\\\"lastName\\\":\\\"Employee 1030\\\"},\\\"deletedAt\\\":null}],\\\"associateAssignments\\\":[{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock11.associatedfa23ca2-fac4-438d-8e10-7f98bb49a0eb@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2797\\\",\\\"firstName\\\":\\\"Mock 11\\\",\\\"lastName\\\":\\\"Associate 11\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock4.associatecdad37b2-449a-48e1-92dc-c1887a281d8b@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2790\\\",\\\"firstName\\\":\\\"Mock 4\\\",\\\"lastName\\\":\\\"Associate 4\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock9.associatee3ea5702-c1eb-42b8-b03a-1b248135a012@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2795\\\",\\\"firstName\\\":\\\"Mock 9\\\",\\\"lastName\\\":\\\"Associate 9\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock8.associate3552881e-19df-4fe1-af58-8f0ac3dacaf7@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2794\\\",\\\"firstName\\\":\\\"Mock 8\\\",\\\"lastName\\\":\\\"Associate 8\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock10.associate29a1d756-7833-40f5-bb76-676bf1f9de51@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2796\\\",\\\"firstName\\\":\\\"Mock 10\\\",\\\"lastName\\\":\\\"Associate 10\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock6.associatecd11277f-b3ef-4068-b1f9-e01d9b05b607@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2792\\\",\\\"firstName\\\":\\\"Mock 6\\\",\\\"lastName\\\":\\\"Associate 6\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock3.associatee2bf04a7-0714-4744-a4e6-ad728b52581a@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2789\\\",\\\"firstName\\\":\\\"Mock 3\\\",\\\"lastName\\\":\\\"Associate 3\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock1.associateb7285396-e4c8-4c4a-aa4b-8d66a0e6de4a@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2787\\\",\\\"firstName\\\":\\\"Mock 1\\\",\\\"lastName\\\":\\\"Associate 1\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock5.associate80ca4fd2-2735-4982-a9d2-88e53a81b538@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2791\\\",\\\"firstName\\\":\\\"Mock 5\\\",\\\"lastName\\\":\\\"Associate 5\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock0.associate238aba45-8884-426f-996c-d70647d5f4ef@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2786\\\",\\\"firstName\\\":\\\"Mock 0\\\",\\\"lastName\\\":\\\"Associate 0\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock2.associatead092ff7-d592-4b20-8a47-336b1b6dacac@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2788\\\",\\\"firstName\\\":\\\"Mock 2\\\",\\\"lastName\\\":\\\"Associate 2\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock7.associatec84323e6-45f3-48ae-a745-d67885f30e91@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2793\\\",\\\"firstName\\\":\\\"Mock 7\\\",\\\"lastName\\\":\\\"Associate 7\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true},{\\\"trainingStatus\\\":\\\"Training\\\",\\\"associate\\\":{\\\"email\\\":\\\"mock12.associatec86fc730-590b-4b33-bf0d-dc3099fcb68f@mock.com\\\",\\\"salesforceId\\\":\\\"SF-2798\\\",\\\"firstName\\\":\\\"Mock 12\\\",\\\"lastName\\\":\\\"Associate 12\\\",\\\"flag\\\":null},\\\"startDate\\\":\\\"2022-02-11\\\",\\\"endDate\\\":\\\"2021-12-03\\\",\\\"active\\\":true}],\\\"currentWeek\\\":-29}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="notes_before_format_json" format="json">
+      <types:shape format="weave" example="notesBeforeFormating.json"><![CDATA[%dw 2.0
+
+type notes_before_format_json = Array<{|  noteId: Number {"typeId": "int"},   content: String,   week: Number {"typeId": "int"},   batchId: String,   associateId: Null,   employeeId: String,   "type": String,   technicalStatus: String,   createdOn: Null,   lastUpdated: Null|}> {"example": "[{\\\"noteId\\\":982,\\\"content\\\":\\\"This is a Qc batch note on week 1\\\",\\\"week\\\":1,\\\"batchId\\\":\\\"TR-1201\\\",\\\"associateId\\\":null,\\\"employeeId\\\":\\\"QC-User\\\",\\\"type\\\":\\\"QC_BATCH\\\",\\\"technicalStatus\\\":\\\"Poor\\\",\\\"createdOn\\\":null,\\\"lastUpdated\\\":null}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#f66ba018-08e8-468d-aa30-8d6fa870b9a5">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="batches_info_json"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#537a137e-9de0-478e-819d-c24abca7df84">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="notes_before_format_json"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="caliber_notes_json"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#32af4c52-8a87-4de4-a9d3-13a2e9816a1a"/>
+  <types:enrichment select="#69cd18f3-80a6-458a-a184-595a15fc4f47">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="notes_before_format_json"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#996b6fff-df3d-4ef0-a08a-5ac9f8e5e08f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="batches_info_json"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

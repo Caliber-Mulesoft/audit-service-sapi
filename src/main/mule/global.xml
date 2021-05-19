@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:request-config name="caliberApiTraining" doc:name="HTTP Request configuration" doc:id="f78eaa82-7cfa-4366-b450-dcd14d1f8664" basePath="${caliber.rest.basePathTraining}" >
+		<http:request-connection host="${caliber.rest.host}" port="${caliber.rest.port}" protocol="HTTPS"/>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="a1c4d42f-22b6-451e-85d5-934687c8c381" file="config.yaml" />
+	<http:request-config name="caliberApiQA" doc:name="HTTP Request configuration" doc:id="d917e54a-c9ca-4dd5-8fc2-b8dbb13c5fe3" basePath="${caliber.rest.basePathQA}">
+		<http:request-connection host="${caliber.rest.host}" port="${caliber.rest.port}" protocol="HTTPS"/>
+	</http:request-config>
+</mule>
